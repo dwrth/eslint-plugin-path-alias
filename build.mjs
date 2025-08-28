@@ -1,6 +1,5 @@
 import esbuild from "esbuild";
 import { resolve } from "node:path";
-import pkg from "./package.json" assert { type: "json" };
 
 /**
  * @type {import('esbuild').BuildOptions[]}

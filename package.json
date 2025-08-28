@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-path-alias",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "main": "./lib/index.js",
   "repository": "https://github.com/msfragala/eslint-plugin-path-alias.git",
   "author": "Mitchell Fragala <ms.fragala@gmail.com>",
@@ -24,7 +24,7 @@
     "package.json"
   ],
   "peerDependencies": {
-    "eslint": "^8.0.0"
+    "eslint": "^9.31.0"
   },
   "dependencies": {
     "find-pkg": "^2.0.0",
