@@ -31,7 +31,7 @@ import styles from "../styles/foo.css"; // No matching alias so this is okay
 
 This option permits using relative paths to import sibling files that match a given pattern. This may be useful if you prefer relative paths for files that are collocated and tightly coupled — e.g. importing styles into a React component. Patterns are matched against the basenames and not full file paths. This option also only applies to files in the same directory, not ones in parent or descendent directories.
 
-The `exceptions` options takes an array of [nanomatch](https://github.com/micromatch/nanomatch) globs:
+The `exceptions` options takes an array of [picomatch](https://github.com/micromatch/picomatch) globs:
 
 ```json
 {

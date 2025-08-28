@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-path-alias",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "main": "./lib/index.js",
   "repository": "https://github.com/msfragala/eslint-plugin-path-alias.git",
   "author": "Mitchell Fragala <ms.fragala@gmail.com>",
@@ -28,8 +28,8 @@
   },
   "dependencies": {
     "find-pkg": "^2.0.0",
-    "get-tsconfig": "^4.7.5",
-    "nanomatch": "^1.2.13"
+    "get-tsconfig": "^4.10.1",
+    "picomatch": "^4.0.3"
   },
   "devDependencies": {
     "@types/eslint": "^8.56.10",

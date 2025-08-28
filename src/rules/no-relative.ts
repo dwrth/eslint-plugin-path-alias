@@ -1,6 +1,6 @@
 import { Rule } from "eslint";
 import { dirname, resolve, basename } from "node:path";
-import nanomatch from "nanomatch";
+import picomatch from "picomatch";
 import { docsUrl } from "../utils/docs-url";
 import { resolveAliases } from "../utils/resolve-aliases";
 
@@ -117,8 +117,8 @@ function matchToAlias(path: string, aliases: Map<string, string[]>) {
 function matchExceptions(path, exceptions) {
   if (!exceptions) return false;
   const filename = basename(path);
-  const matches = nanomatch(filename, exceptions);
-  return matches.includes(filename);
+
+  return exceptions.some((exception) => picomatch.isMatch(filename, exception));
 }
 
 function insertAlias(path: string, alias: string, aliasPaths: string[]) {

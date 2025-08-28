@@ -56,27 +56,29 @@ import styles from "../styles/foo.css"; // No matching alias so this is okay
 You can define your path aliases as options to the `path-alias/no-relative` rule:
 
 ```js
-import pathAlias from 'eslint-plugin-path-alias';
-import { resolve } from 'node:path';
+import pathAlias from "eslint-plugin-path-alias";
+import { resolve } from "node:path";
 
 export default [
   {
     plugins: {
-      'path-alias': pathAlias,
+      "path-alias": pathAlias,
     },
     rules: {
-      'path-alias/no-relative': ['error', {
-        paths: {
-          // It's recommended to resolve path alias directories as
-          // relative paths will be resolved relative to cwd. This
-          // may cause unexpected behavior in monorepo setups
-          '@': resolve(import.meta.dirname, './src'),
+      "path-alias/no-relative": [
+        "error",
+        {
+          paths: {
+            // It's recommended to resolve path alias directories as
+            // relative paths will be resolved relative to cwd. This
+            // may cause unexpected behavior in monorepo setups
+            "@": resolve(import.meta.dirname, "./src"),
+          },
         },
-      }],
+      ],
     },
   },
 ];
-
 ```
 
 ### tsconfig.json
@@ -91,7 +93,7 @@ If no paths are founded in either the rule or a `tsconfig.json`, this plugin wil
 
 This option permits using relative paths to import sibling files that match a given pattern. This may be useful if you prefer relative paths for files that are collocated and tightly coupled — e.g. importing styles into a React component. Patterns are matched against the basenames and not full file paths. This option also only applies to files in the same directory, not ones in parent or descendent directories.
 
-The `exceptions` options takes an array of [nanomatch](https://github.com/micromatch/nanomatch) globs:
+The `exceptions` options takes an array of [picomatch](https://github.com/micromatch/picomatch) globs:
 
 ```json
 {
@@ -118,5 +120,6 @@ import styles from "@/components/Button.module.css";
 ```
 
 ## Notes
+
 - Does not validate imports using path aliases. Try using `import/no-unresolved` from [eslint-plugin-import](https://github.com/import-js/eslint-plugin-import) for that
 - Does not work with CommonJS imports via `require()`

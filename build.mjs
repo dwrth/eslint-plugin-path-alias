@@ -24,6 +24,6 @@ outputs.forEach((output) => {
     bundle: true,
     minify: true,
     platform: "node",
-    external: ["eslint", "nanomatch", "get-tsconfig", "find-pkg"],
+    external: ["eslint", "picomatch", "get-tsconfig", "find-pkg"],
   });
 });
