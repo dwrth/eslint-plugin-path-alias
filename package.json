@@ -1,9 +1,12 @@
 {
   "name": "eslint-plugin-path-alias",
-  "version": "2.1.2",
-  "main": "./lib/index.js",
-  "repository": "https://github.com/msfragala/eslint-plugin-path-alias.git",
+  "version": "2.1.3",
+  "main": "./dist/index.mjs",
+  "repository": "https://github.com/dwrth/eslint-plugin-path-alias.git",
   "author": "Mitchell Fragala <ms.fragala@gmail.com>",
+  "contributors": [
+    "David Werth <info@davidwerth.com>"
+  ],
   "license": "MIT",
   "scripts": {
     "build": "node build.mjs",
@@ -20,6 +23,7 @@
   },
   "files": [
     "dist",
+    "build.mjs",
     "index.js",
     "package.json"
   ],
