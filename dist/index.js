@@ -1,1 +1,226 @@
-var C=Object.create;var f=Object.defineProperty;var I=Object.getOwnPropertyDescriptor;var U=Object.getOwnPropertyNames;var S=Object.getPrototypeOf,F=Object.prototype.hasOwnProperty;var $=(e,t)=>{for(var r in t)f(e,r,{get:t[r],enumerable:!0})},y=(e,t,r,i)=>{if(t&&typeof t=="object"||typeof t=="function")for(let s of U(t))!F.call(e,s)&&s!==r&&f(e,s,{get:()=>t[s],enumerable:!(i=I(t,s))||i.enumerable});return e};var b=(e,t,r)=>(r=e!=null?C(S(e)):{},y(t||!e||!e.__esModule?f(r,"default",{value:e,enumerable:!0}):r,e)),D=e=>y(f({},"__esModule",{value:!0}),e);var N={};$(N,{default:()=>J});module.exports=D(N);var h="eslint-plugin-path-alias",v="2.1.2";var p=require("path"),E=b(require("picomatch"));function j(e){return`https://github/com/msfragala/eslint-plugin-path-alias/blob/master/docs/rules/${e}.md`}var R=require("get-tsconfig"),a=require("path"),w=b(require("find-pkg")),O=require("fs");function P(e){if(e.options[0]?.paths)return z(e);let t=e.getFilename?.()??e.filename,r=(0,R.getTsconfig)(t);if(r?.config?.compilerOptions?.paths)return q(r);let i=w.default.sync((0,a.dirname)(t));if(!i)return;let s=JSON.parse((0,O.readFileSync)(i).toString());if(s?.imports)return L(s,i)}function L(e,t){let r=new Map,i=e.imports??{},s=(0,a.dirname)(t);return Object.entries(i).forEach(([o,n])=>{if(!n||typeof n!="string")return;let l=(0,a.resolve)(s,n);r.set(o,[l])}),r}function q(e){let t=new Map,r=e?.config?.compilerOptions?.paths??{},i=(0,a.dirname)(e.path);return e.config.compilerOptions?.baseUrl&&(i=(0,a.resolve)((0,a.dirname)(e.path),e.config.compilerOptions.baseUrl)),Object.entries(r).forEach(([s,o])=>{s=s.replace(/\/\*$/,""),o=o.map(n=>(0,a.resolve)(i,n.replace(/\/\*$/,""))),t.set(s,o)}),t}function z(e){let t=new Map,r=e.options[0]?.paths??{};return Object.entries(r).forEach(([i,s])=>{if(!s||typeof s!="string")return;if(s.startsWith("/")){t.set(i,[s]);return}let o=e.getCwd?.()??e.cwd,n=(0,a.resolve)(o,s);t.set(i,[n])}),t}var T={meta:{type:"suggestion",docs:{description:"Ensure imports use path aliases whenever possible vs. relative paths",url:j("no-relative")},fixable:"code",schema:[{type:"object",properties:{exceptions:{type:"array",items:{type:"string"}},paths:{type:"object"}},additionalProperties:!1}],messages:{shouldUseAlias:"Import should use path alias instead of relative path"}},create(e){let t=e.options[0]?.exceptions,r=e.getFilename?.()??e.filename,i=P(e);return i?.size?{ImportExpression(s){if(s.source.type!=="Literal"||typeof s.source.value!="string")return;let o=s.source.raw,n=s.source.value;if(!/^(\.?\.\/)/.test(n))return;let l=(0,p.resolve)((0,p.dirname)(r),n);if(k(l,t))return;let c=M(l,i);c&&e.report({node:s,messageId:"shouldUseAlias",data:{alias:c},fix(m){let g=A(l,c,i.get(c)),d=o.replace(n,g);return m.replaceText(s.source,d)}})},ImportDeclaration(s){if(typeof s.source.value!="string")return;let o=s.source.value;if(!/^(\.?\.\/)/.test(o))return;let n=(0,p.resolve)((0,p.dirname)(r),o),l=k(n,t),u=M(n,i);l||u&&e.report({node:s,messageId:"shouldUseAlias",data:{alias:u},fix(c){let m=s.source.raw,g=A(n,u,i.get(u)),d=m.replace(o,g);return c.replaceText(s.source,d)}})}}:{}}};function M(e,t){return Array.from(t.keys()).find(r=>t.get(r).some(s=>e.indexOf(s)===0))}function k(e,t){if(!t)return!1;let r=(0,p.basename)(e);return t.some(i=>E.default.isMatch(r,i))}function A(e,t,r){for(let i of r)if(e.indexOf(i)===0)return e.replace(i,t)}var J={name:h,version:v,meta:{name:h,version:v},rules:{"no-relative":T}};
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name2 in all)
+    __defProp(target, name2, { get: all[name2], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+// src/index.ts
+var src_exports = {};
+__export(src_exports, {
+  default: () => src_default
+});
+module.exports = __toCommonJS(src_exports);
+
+// package.json
+var name = "eslint-plugin-path-alias";
+var version = "2.1.4";
+
+// src/rules/no-relative.ts
+var import_node_path2 = require("path");
+var import_picomatch = __toESM(require("picomatch"));
+
+// src/utils/docs-url.ts
+function docsUrl(ruleName) {
+  const repo = "https://github/com/msfragala/eslint-plugin-path-alias";
+  return `${repo}/blob/master/docs/rules/${ruleName}.md`;
+}
+
+// src/utils/resolve-aliases.ts
+var import_get_tsconfig = require("get-tsconfig");
+var import_node_path = require("path");
+var import_find_pkg = __toESM(require("find-pkg"));
+var import_node_fs = require("fs");
+function resolveAliases(context) {
+  if (context.options[0]?.paths) {
+    return resolveCustomPaths(context);
+  }
+  const filename = context.getFilename?.() ?? context.filename;
+  const tsConfig = (0, import_get_tsconfig.getTsconfig)(filename);
+  if (tsConfig?.config?.compilerOptions?.paths) {
+    return resolveTsconfigPaths(tsConfig);
+  }
+  const path = import_find_pkg.default.sync((0, import_node_path.dirname)(filename));
+  if (!path) return;
+  const pkg = JSON.parse((0, import_node_fs.readFileSync)(path).toString());
+  if (pkg?.imports) {
+    return resolvePackageImports(pkg, path);
+  }
+}
+function resolvePackageImports(pkg, pkgPath) {
+  const aliases = /* @__PURE__ */ new Map();
+  const imports = pkg.imports ?? {};
+  const base = (0, import_node_path.dirname)(pkgPath);
+  Object.entries(imports).forEach(([alias, path]) => {
+    if (!path) return;
+    if (typeof path !== "string") return;
+    const resolved = (0, import_node_path.resolve)(base, path);
+    aliases.set(alias, [resolved]);
+  });
+  return aliases;
+}
+function resolveTsconfigPaths(config) {
+  const aliases = /* @__PURE__ */ new Map();
+  const paths = config?.config?.compilerOptions?.paths ?? {};
+  let base = (0, import_node_path.dirname)(config.path);
+  if (config.config.compilerOptions?.baseUrl) {
+    base = (0, import_node_path.resolve)((0, import_node_path.dirname)(config.path), config.config.compilerOptions.baseUrl);
+  }
+  Object.entries(paths).forEach(([alias, path]) => {
+    alias = alias.replace(/\/\*$/, "");
+    path = path.map((p) => (0, import_node_path.resolve)(base, p.replace(/\/\*$/, "")));
+    aliases.set(alias, path);
+  });
+  return aliases;
+}
+function resolveCustomPaths(context) {
+  const aliases = /* @__PURE__ */ new Map();
+  const paths = context.options[0]?.paths ?? {};
+  Object.entries(paths).forEach(([alias, path]) => {
+    if (!path) return;
+    if (typeof path !== "string") return;
+    if (path.startsWith("/")) {
+      aliases.set(alias, [path]);
+      return;
+    }
+    const cwd = context.getCwd?.() ?? context.cwd;
+    const resolved = (0, import_node_path.resolve)(cwd, path);
+    aliases.set(alias, [resolved]);
+  });
+  return aliases;
+}
+
+// src/rules/no-relative.ts
+var noRelative = {
+  meta: {
+    type: "suggestion",
+    docs: {
+      description: "Ensure imports use path aliases whenever possible vs. relative paths",
+      url: docsUrl("no-relative")
+    },
+    fixable: "code",
+    schema: [
+      {
+        type: "object",
+        properties: {
+          exceptions: {
+            type: "array",
+            items: {
+              type: "string"
+            }
+          },
+          paths: {
+            type: "object"
+          }
+        },
+        additionalProperties: false
+      }
+    ],
+    messages: {
+      shouldUseAlias: "Import should use path alias instead of relative path"
+    }
+  },
+  create(context) {
+    const exceptions = context.options[0]?.exceptions;
+    const filePath = context.getFilename?.() ?? context.filename;
+    const aliases = resolveAliases(context);
+    if (!aliases?.size) return {};
+    return {
+      ImportExpression(node) {
+        if (node.source.type !== "Literal") return;
+        if (typeof node.source.value !== "string") return;
+        const raw = node.source.raw;
+        const importPath = node.source.value;
+        if (!/^(\.?\.\/)/.test(importPath)) {
+          return;
+        }
+        const resolved = (0, import_node_path2.resolve)((0, import_node_path2.dirname)(filePath), importPath);
+        const excepted = matchExceptions(resolved, exceptions);
+        if (excepted) return;
+        const alias = matchToAlias(resolved, aliases);
+        if (!alias) return;
+        context.report({
+          node,
+          messageId: "shouldUseAlias",
+          data: { alias },
+          fix(fixer) {
+            const aliased = insertAlias(resolved, alias, aliases.get(alias));
+            const fixed = raw.replace(importPath, aliased);
+            return fixer.replaceText(node.source, fixed);
+          }
+        });
+      },
+      ImportDeclaration(node) {
+        if (typeof node.source.value !== "string") return;
+        const importPath = node.source.value;
+        if (!/^(\.?\.\/)/.test(importPath)) {
+          return;
+        }
+        const resolved = (0, import_node_path2.resolve)((0, import_node_path2.dirname)(filePath), importPath);
+        const excepted = matchExceptions(resolved, exceptions);
+        const alias = matchToAlias(resolved, aliases);
+        if (excepted) return;
+        if (!alias) return;
+        context.report({
+          node,
+          messageId: "shouldUseAlias",
+          data: { alias },
+          fix(fixer) {
+            const raw = node.source.raw;
+            const aliased = insertAlias(resolved, alias, aliases.get(alias));
+            const fixed = raw.replace(importPath, aliased);
+            return fixer.replaceText(node.source, fixed);
+          }
+        });
+      }
+    };
+  }
+};
+function matchToAlias(path, aliases) {
+  return Array.from(aliases.keys()).find((alias) => {
+    const paths = aliases.get(alias);
+    return paths.some((aliasPath) => path.indexOf(aliasPath) === 0);
+  });
+}
+function matchExceptions(path, exceptions) {
+  if (!exceptions) return false;
+  const filename = (0, import_node_path2.basename)(path);
+  return exceptions.some((exception) => import_picomatch.default.isMatch(filename, exception));
+}
+function insertAlias(path, alias, aliasPaths) {
+  for (let aliasPath of aliasPaths) {
+    if (path.indexOf(aliasPath) !== 0) continue;
+    return path.replace(aliasPath, alias);
+  }
+}
+
+// src/index.ts
+var src_default = {
+  name,
+  version,
+  meta: { name, version },
+  rules: {
+    "no-relative": noRelative
+  }
+};

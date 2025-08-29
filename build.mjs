@@ -22,7 +22,7 @@ outputs.forEach((output) => {
     ...output,
     entryPoints: [resolve("./src/index.ts")],
     bundle: true,
-    minify: true,
+    minify: false,
     platform: "node",
     external: ["eslint", "picomatch", "get-tsconfig", "find-pkg"],
   });

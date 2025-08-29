@@ -1,1 +1,194 @@
-var d="eslint-plugin-path-alias",h="2.1.2";import{dirname as x,resolve as j,basename as I}from"path";import U from"picomatch";function y(e){return`https://github/com/msfragala/eslint-plugin-path-alias/blob/master/docs/rules/${e}.md`}import{getTsconfig as M}from"get-tsconfig";import{resolve as c,dirname as u}from"path";import k from"find-pkg";import{readFileSync as A}from"fs";function b(e){if(e.options[0]?.paths)return C(e);let s=e.getFilename?.()??e.filename,i=M(s);if(i?.config?.compilerOptions?.paths)return T(i);let r=k.sync(u(s));if(!r)return;let t=JSON.parse(A(r).toString());if(t?.imports)return E(t,r)}function E(e,s){let i=new Map,r=e.imports??{},t=u(s);return Object.entries(r).forEach(([o,n])=>{if(!n||typeof n!="string")return;let a=c(t,n);i.set(o,[a])}),i}function T(e){let s=new Map,i=e?.config?.compilerOptions?.paths??{},r=u(e.path);return e.config.compilerOptions?.baseUrl&&(r=c(u(e.path),e.config.compilerOptions.baseUrl)),Object.entries(i).forEach(([t,o])=>{t=t.replace(/\/\*$/,""),o=o.map(n=>c(r,n.replace(/\/\*$/,""))),s.set(t,o)}),s}function C(e){let s=new Map,i=e.options[0]?.paths??{};return Object.entries(i).forEach(([r,t])=>{if(!t||typeof t!="string")return;if(t.startsWith("/")){s.set(r,[t]);return}let o=e.getCwd?.()??e.cwd,n=c(o,t);s.set(r,[n])}),s}var P={meta:{type:"suggestion",docs:{description:"Ensure imports use path aliases whenever possible vs. relative paths",url:y("no-relative")},fixable:"code",schema:[{type:"object",properties:{exceptions:{type:"array",items:{type:"string"}},paths:{type:"object"}},additionalProperties:!1}],messages:{shouldUseAlias:"Import should use path alias instead of relative path"}},create(e){let s=e.options[0]?.exceptions,i=e.getFilename?.()??e.filename,r=b(e);return r?.size?{ImportExpression(t){if(t.source.type!=="Literal"||typeof t.source.value!="string")return;let o=t.source.raw,n=t.source.value;if(!/^(\.?\.\/)/.test(n))return;let a=j(x(i),n);if(w(a,s))return;let p=R(a,r);p&&e.report({node:t,messageId:"shouldUseAlias",data:{alias:p},fix(f){let m=O(a,p,r.get(p)),g=o.replace(n,m);return f.replaceText(t.source,g)}})},ImportDeclaration(t){if(typeof t.source.value!="string")return;let o=t.source.value;if(!/^(\.?\.\/)/.test(o))return;let n=j(x(i),o),a=w(n,s),l=R(n,r);a||l&&e.report({node:t,messageId:"shouldUseAlias",data:{alias:l},fix(p){let f=t.source.raw,m=O(n,l,r.get(l)),g=f.replace(o,m);return p.replaceText(t.source,g)}})}}:{}}};function R(e,s){return Array.from(s.keys()).find(i=>s.get(i).some(t=>e.indexOf(t)===0))}function w(e,s){if(!s)return!1;let i=I(e);return s.some(r=>U.isMatch(i,r))}function O(e,s,i){for(let r of i)if(e.indexOf(r)===0)return e.replace(r,s)}var Q={name:d,version:h,meta:{name:d,version:h},rules:{"no-relative":P}};export{Q as default};
+// package.json
+var name = "eslint-plugin-path-alias";
+var version = "2.1.4";
+
+// src/rules/no-relative.ts
+import { dirname as dirname2, resolve as resolve2, basename } from "path";
+import picomatch from "picomatch";
+
+// src/utils/docs-url.ts
+function docsUrl(ruleName) {
+  const repo = "https://github/com/msfragala/eslint-plugin-path-alias";
+  return `${repo}/blob/master/docs/rules/${ruleName}.md`;
+}
+
+// src/utils/resolve-aliases.ts
+import { getTsconfig } from "get-tsconfig";
+import { resolve, dirname } from "path";
+import findPkg from "find-pkg";
+import { readFileSync } from "fs";
+function resolveAliases(context) {
+  if (context.options[0]?.paths) {
+    return resolveCustomPaths(context);
+  }
+  const filename = context.getFilename?.() ?? context.filename;
+  const tsConfig = getTsconfig(filename);
+  if (tsConfig?.config?.compilerOptions?.paths) {
+    return resolveTsconfigPaths(tsConfig);
+  }
+  const path = findPkg.sync(dirname(filename));
+  if (!path) return;
+  const pkg = JSON.parse(readFileSync(path).toString());
+  if (pkg?.imports) {
+    return resolvePackageImports(pkg, path);
+  }
+}
+function resolvePackageImports(pkg, pkgPath) {
+  const aliases = /* @__PURE__ */ new Map();
+  const imports = pkg.imports ?? {};
+  const base = dirname(pkgPath);
+  Object.entries(imports).forEach(([alias, path]) => {
+    if (!path) return;
+    if (typeof path !== "string") return;
+    const resolved = resolve(base, path);
+    aliases.set(alias, [resolved]);
+  });
+  return aliases;
+}
+function resolveTsconfigPaths(config) {
+  const aliases = /* @__PURE__ */ new Map();
+  const paths = config?.config?.compilerOptions?.paths ?? {};
+  let base = dirname(config.path);
+  if (config.config.compilerOptions?.baseUrl) {
+    base = resolve(dirname(config.path), config.config.compilerOptions.baseUrl);
+  }
+  Object.entries(paths).forEach(([alias, path]) => {
+    alias = alias.replace(/\/\*$/, "");
+    path = path.map((p) => resolve(base, p.replace(/\/\*$/, "")));
+    aliases.set(alias, path);
+  });
+  return aliases;
+}
+function resolveCustomPaths(context) {
+  const aliases = /* @__PURE__ */ new Map();
+  const paths = context.options[0]?.paths ?? {};
+  Object.entries(paths).forEach(([alias, path]) => {
+    if (!path) return;
+    if (typeof path !== "string") return;
+    if (path.startsWith("/")) {
+      aliases.set(alias, [path]);
+      return;
+    }
+    const cwd = context.getCwd?.() ?? context.cwd;
+    const resolved = resolve(cwd, path);
+    aliases.set(alias, [resolved]);
+  });
+  return aliases;
+}
+
+// src/rules/no-relative.ts
+var noRelative = {
+  meta: {
+    type: "suggestion",
+    docs: {
+      description: "Ensure imports use path aliases whenever possible vs. relative paths",
+      url: docsUrl("no-relative")
+    },
+    fixable: "code",
+    schema: [
+      {
+        type: "object",
+        properties: {
+          exceptions: {
+            type: "array",
+            items: {
+              type: "string"
+            }
+          },
+          paths: {
+            type: "object"
+          }
+        },
+        additionalProperties: false
+      }
+    ],
+    messages: {
+      shouldUseAlias: "Import should use path alias instead of relative path"
+    }
+  },
+  create(context) {
+    const exceptions = context.options[0]?.exceptions;
+    const filePath = context.getFilename?.() ?? context.filename;
+    const aliases = resolveAliases(context);
+    if (!aliases?.size) return {};
+    return {
+      ImportExpression(node) {
+        if (node.source.type !== "Literal") return;
+        if (typeof node.source.value !== "string") return;
+        const raw = node.source.raw;
+        const importPath = node.source.value;
+        if (!/^(\.?\.\/)/.test(importPath)) {
+          return;
+        }
+        const resolved = resolve2(dirname2(filePath), importPath);
+        const excepted = matchExceptions(resolved, exceptions);
+        if (excepted) return;
+        const alias = matchToAlias(resolved, aliases);
+        if (!alias) return;
+        context.report({
+          node,
+          messageId: "shouldUseAlias",
+          data: { alias },
+          fix(fixer) {
+            const aliased = insertAlias(resolved, alias, aliases.get(alias));
+            const fixed = raw.replace(importPath, aliased);
+            return fixer.replaceText(node.source, fixed);
+          }
+        });
+      },
+      ImportDeclaration(node) {
+        if (typeof node.source.value !== "string") return;
+        const importPath = node.source.value;
+        if (!/^(\.?\.\/)/.test(importPath)) {
+          return;
+        }
+        const resolved = resolve2(dirname2(filePath), importPath);
+        const excepted = matchExceptions(resolved, exceptions);
+        const alias = matchToAlias(resolved, aliases);
+        if (excepted) return;
+        if (!alias) return;
+        context.report({
+          node,
+          messageId: "shouldUseAlias",
+          data: { alias },
+          fix(fixer) {
+            const raw = node.source.raw;
+            const aliased = insertAlias(resolved, alias, aliases.get(alias));
+            const fixed = raw.replace(importPath, aliased);
+            return fixer.replaceText(node.source, fixed);
+          }
+        });
+      }
+    };
+  }
+};
+function matchToAlias(path, aliases) {
+  return Array.from(aliases.keys()).find((alias) => {
+    const paths = aliases.get(alias);
+    return paths.some((aliasPath) => path.indexOf(aliasPath) === 0);
+  });
+}
+function matchExceptions(path, exceptions) {
+  if (!exceptions) return false;
+  const filename = basename(path);
+  return exceptions.some((exception) => picomatch.isMatch(filename, exception));
+}
+function insertAlias(path, alias, aliasPaths) {
+  for (let aliasPath of aliasPaths) {
+    if (path.indexOf(aliasPath) !== 0) continue;
+    return path.replace(aliasPath, alias);
+  }
+}
+
+// src/index.ts
+var src_default = {
+  name,
+  version,
+  meta: { name, version },
+  rules: {
+    "no-relative": noRelative
+  }
+};
+export {
+  src_default as default
+};
